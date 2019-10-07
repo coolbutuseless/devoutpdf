@@ -1,0 +1,17 @@
+Package: devoutpdf
+Type: Package
+Title: PDF Graphics Device Written in R
+Version: 0.1.0
+Author: mikefc@coolbutuseless.com
+Maintainer: mikefc <mikefc@coolbutuseless.com>
+Description: PDF graphics device written in R.
+License: MIT + file LICENSE
+Encoding: UTF-8
+LazyData: true
+URL: https://github.com/coolbutuseless/devoutpdf,https://coolbutuseless.github.io/package/devoutpdf
+Imports:
+    devout,
+    gdtools,
+    glue,
+    minipdf
+RoxygenNote: 6.1.1

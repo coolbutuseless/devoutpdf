@@ -1,0 +1,219 @@
+---
+output: github_document
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "man/figures/README-",
+  out.width = "100%"
+)
+
+
+suppressPackageStartupMessages({
+  library(devout)
+  library(devoutpdf)
+  library(ggplot2)
+})
+```
+
+
+
+```{r echo = FALSE, eval = FALSE}
+# Quick logo generation. Borrowed heavily from Nick Tierney's Syn logo process
+library(magick)
+library(showtext)
+font_add_google("Abril Fatface", "gf")
+
+
+# pkgdown::build_site(override = list(destination = "../coolbutuseless.github.io/package/devoutpdf"))
+```
+
+
+```{r echo = FALSE, eval = FALSE}
+img <- image_read("man/figures/white.png")
+
+
+hexSticker::sticker(subplot  = img,
+                    s_x      = 1,
+                    s_y      = 1.2,
+                    s_width  = 1.5,
+                    s_height = 0.95,
+                    package  = "/dev/out/\npdf",
+                    p_x      = 1,
+                    p_y      = 1,
+                    p_color  = "#223344",
+                    p_family = "gf",
+                    p_size   = 9,
+                    h_size   = 1.2,
+                    h_fill   = "#ffffff",
+                    h_color  = "#223344",
+                    filename = "man/figures/logo.png")
+
+image_read("man/figures/logo.png")
+```
+
+
+# devoutpdf <img src="man/figures/logo.png" align="right" height=230/>
+
+<!-- badges: start -->
+![](http://img.shields.io/badge/cool-useless-green.svg)
+![](http://img.shields.io/badge/dev-out-blue.svg)
+<!-- badges: end -->
+
+`devoutpdf` is a hand-crafted PDF graphics device written in plain R.
+
+It achieves this by invoking the [`devout`](https://github.com/coolbutuseless/devout) 
+package to do all the interfacing between the C++ side and the R side.  
+
+Drawing commands which sent to the graphics
+device are used to construct a [`minipdf`](https://github.com/coolbutuseless/minipdf) document.
+
+### Why would you want this?
+
+Given that `pdf()` and `cairo_pdf()` devices come with R, what's the point of 
+a third PDF output device?
+
+
+* Hacking your own graphics device gives a significant amount of control over the
+  actual output
+* You can learn how a graphics device works - it's just R, so there's no C++ code to 
+  sift through.
+* Use as a template to write your own graphics device for something bespoke e.g. 
+  pen plotter output or a laser projection driver!
+* Glitch the output at the device level e.g. for each line, perhaps draw
+  multiple overlapping lines with randomly jittered endpoints to simulate a 
+  'pencil sketch' effect.
+
+
+### The R code
+
+The R code for this device is a single file about 300 lines long - most of which 
+is whitespace and comments.  Check it out [on github](https://github.com/coolbutuseless/devoutpdf-prep/blob/master/R/pdfout.R)
+
+### ToDo
+
+* Helvetica font is currently used regardless of what the user specifies.  This
+  is a deficiency that first needs to be fixed in `minipdf`.
+
+## Installation
+
+You can install from [GitHub](https://github.com/coolbutuseless/devoutpdf) with:
+
+``` r
+# install.packages("devtools")
+devtools::install_github("coolbutuseless/devout")    # graphics device shim
+devtools::install_github("coolbutuseless/minipdf")   # PDF document builder
+devtools::install_github("coolbutuseless/devoutpdf") # Devout PDF graphics device
+```
+## Example: ggplot scatterplot
+
+
+```{r pdfout1, eval = TRUE}
+devoutpdf::pdfout(filename = "man/figures/test1.pdf", width=5, height=4)
+ggplot(mtcars) + 
+  geom_point(aes(mpg, wt)) + 
+  labs(title = "test1") + 
+  theme_bw()
+invisible(dev.off())
+```
+
+
+```{r include = FALSE}
+system("convert -density 300 man/figures/test1.pdf -resize 100% -define png:exclude-chunks=date,time man/figures/test1.png")
+```
+
+```{r echo = FALSE, out.width="70%"}
+knitr::include_graphics("man/figures/test1.png")
+```
+
+
+## Example: ggplot bar plot
+
+```{r pdfout2, eval = TRUE, out.width = "75%"}
+devoutpdf::pdfout(filename = "man/figures/test2.pdf", width = 6, height = 4)
+ggplot(mtcars) + 
+  geom_bar(aes(as.factor(cyl), fill = as.factor(cyl))) + 
+  labs(title = "test2")
+invisible(dev.off())
+```
+
+
+```{r include = FALSE}
+system("convert -density 300 man/figures/test2.pdf -resize 100% -define png:exclude-chunks=date,time man/figures/test2.png")
+```
+
+```{r echo = FALSE}
+knitr::include_graphics("man/figures/test2.png")
+```
+
+
+## Example: ggplot density plot
+
+```{r pdfout3, eval = TRUE, out.width = "75%"}
+devoutpdf::pdfout(filename = "man/figures/test3.pdf", width = 6, height = 4)
+ggplot(mtcars) + 
+  geom_density(aes(mpg, fill = as.factor(cyl)), alpha = 1, size = 2) +
+  theme_bw()
+invisible(dev.off())
+```
+
+
+```{r include = FALSE}
+system("convert -density 300 man/figures/test3.pdf -resize 100% -define png:exclude-chunks=date,time man/figures/test3.png")
+```
+
+```{r echo = FALSE}
+knitr::include_graphics("man/figures/test3.png")
+```
+
+
+
+## Example: tmap world plot
+
+```{r pdfout4}
+library(tmap)
+data("World")
+
+devoutpdf::pdfout(filename = "man/figures/test4.pdf", width = 5, height = 4)
+tm_shape(World) +
+    tm_polygons("HPI")
+invisible(dev.off())
+```
+
+
+```{r include = FALSE}
+system("convert -density 300 man/figures/test4.pdf -resize 100% -define png:exclude-chunks=date,time man/figures/test4.png")
+```
+
+```{r echo = FALSE}
+knitr::include_graphics("man/figures/test4.png")
+```
+
+
+## Example: base graphics pie chart
+
+```{r pdfout5}
+devoutpdf::pdfout(filename = "man/figures/test5.pdf", width = 5, height = 4)
+pie(c(cool = 4, but = 2, use = 1, less = 8))
+invisible(dev.off())
+```
+
+
+```{r include = FALSE}
+system("convert -density 300 man/figures/test5.pdf -resize 100% -define png:exclude-chunks=date,time man/figures/test5.png")
+```
+
+```{r echo = FALSE}
+knitr::include_graphics("man/figures/test5.png")
+```
+
+
+
+
+
+
+
