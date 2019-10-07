@@ -6,9 +6,7 @@
 <!-- badges: start -->
 
 ![](http://img.shields.io/badge/cool-useless-green.svg)
-![](http://img.shields.io/badge/dev-out-blue.svg) [![Travis build
-status](https://travis-ci.org/coolbutuseless/devoutpdf.svg?branch=master)](https://travis-ci.org/coolbutuseless/devoutpdf)
-<!-- badges: end -->
+![](http://img.shields.io/badge/dev-out-blue.svg) <!-- badges: end -->
 
 `devoutpdf` is a hand-crafted PDF graphics device written in plain R.
 
