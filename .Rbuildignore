@@ -3,3 +3,4 @@
 ^README\.Rmd$
 ^working$
 ^pkgdown$
+^\.travis\.yml$
