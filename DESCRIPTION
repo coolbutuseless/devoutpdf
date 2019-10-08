@@ -9,9 +9,10 @@ License: MIT + file LICENSE
 Encoding: UTF-8
 LazyData: true
 URL: https://github.com/coolbutuseless/devoutpdf,https://coolbutuseless.github.io/package/devoutpdf
+Depends:
+    devout
 Imports:
-    devout,
     gdtools,
     glue,
     minipdf
-RoxygenNote: 6.1.1
+RoxygenNote: 6.1.99.9001
